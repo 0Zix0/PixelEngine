@@ -59,8 +59,8 @@ public abstract class Game extends Canvas implements Runnable {
 					averageFPS = averageFPS / loggedFPS.size();
 				}
 				
-				System.out.println("Ran for " + (System.currentTimeMillis() - startTime) / 1000.0f + " seconds");
-				System.out.println("Average FPS was " + averageFPS + "fps");
+				//System.out.println("Ran for " + (System.currentTimeMillis() - startTime) / 1000.0f + " seconds");
+				//System.out.println("Average FPS was " + averageFPS + "fps");
 				
 				super.windowClosing(e);
 			}
