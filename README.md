@@ -19,7 +19,7 @@ public class MyGame extends Game {
 
 	public void onRender(Renderer renderer) {
 		// Called as many times as possible.
-		// Used the supplied renderer instance to
+		// Use the supplied renderer instance to
 		// draw to the screen.
 	}
 	
