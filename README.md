@@ -3,7 +3,7 @@
 ### How to use
 1. Extend the abstract class `Game`
 2. Implement the 3 methods `onCreate()`, `onUpdate()` and `onRender()`  
-3. Create a new instance of your classe and call the `start()` method.
+3. Create a new instance of your class and call the `start()` method.
 ```java
 public class MyGame extends Game {
 
