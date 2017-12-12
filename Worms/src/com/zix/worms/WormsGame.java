@@ -31,15 +31,15 @@ public class WormsGame extends Game {
 			createMap();
 		}
 		
-		if(Input.mouseButtonDownR(MouseEvent.BUTTON2)) {
-			objects.add(new Dummy((float)(Input.mouseX() / scale()) + cameraPosX, (float)(Input.mouseY() / scale()) + cameraPosY));
+		if(Input.mouseButtonDownReset(MouseEvent.BUTTON2)) {
+			objects.add(new Worm((float)(Input.mouseX() / scale()) + cameraPosX, (float)(Input.mouseY() / scale()) + cameraPosY));
 		}
 
-		if(Input.mouseButtonDownR(MouseEvent.BUTTON1)) {
-			explosion((float)(Input.mouseX() / scale()) + cameraPosX, (float)(Input.mouseY() / scale()) + cameraPosY, 10.0f);
+		if(Input.mouseButtonDownReset(MouseEvent.BUTTON1)) {
+			explosion((float)(Input.mouseX() / scale()) + cameraPosX, (float)(Input.mouseY() / scale()) + cameraPosY, 9.0f);
 		}
 		
-		if(Input.mouseButtonDownR(MouseEvent.BUTTON3)) {
+		if(Input.mouseButtonDownReset(MouseEvent.BUTTON3)) {
 			objects.add(new Missile((float)(Input.mouseX() / scale()) + cameraPosX, (float)(Input.mouseY() / scale()) + cameraPosY));
 		}
 		
@@ -75,6 +75,8 @@ public class WormsGame extends Game {
 			float responseY = 0;
 			boolean collision = false;
 			
+			float collisionX = 0.0f, collisionY = 0.0f;
+			
 			for(float r = angle - 3.14159f / 2.0f; r < angle + 3.14159f / 2.0f; r += 3.14159f / 8.0f) {
 				float testPosX = (p.radius) * (float)Math.cos(r) + potentialX;
 				float testPosY = (p.radius) * (float)Math.sin(r) + potentialY;
@@ -87,6 +89,9 @@ public class WormsGame extends Game {
 				if(map[(int)testPosY * mapWidth + (int)testPosX] != 0) {
 					responseX += potentialX - testPosX;
 					responseY += potentialY - testPosY;
+					
+					collisionX = testPosX;
+					collisionY = testPosY;
 					collision = true;
 				}
  			}
@@ -109,6 +114,18 @@ public class WormsGame extends Game {
 						if(response > 0) {
 							explosion(p.px, p.py, response);
 						}
+						/*
+						if(p instanceof Debris) {
+							for(int x = 0; x < 3; x++) {
+								for(int y = 0; y < 3; y++) {
+									if((x == 0 && y == 0) || (x == 2 && y == 0) || (x == 2 && y == 2) || (x == 0 && y == 2)) continue;
+									int genX = (int)collisionX;
+									int genY = (int)collisionY;
+									map[(((genX - 1) + x) + ((genY - 1) + y) * mapWidth)] = 1;
+								}
+							}
+						}
+						*/
 					}
 				}
 			} else {
@@ -182,6 +199,9 @@ public class WormsGame extends Game {
 				case 1:
 					renderer.drawPixel(x, y, 0x619B55);
 					break;
+				case 2:
+					renderer.drawPixel(x, y, 0xFF0000);
+					break;
 				}
 			}
 		}
@@ -233,6 +253,6 @@ public class WormsGame extends Game {
 	
 	public static void main(String[] args) {
 		WormsGame game = new WormsGame();
-		game.start("Worms", 256, 170, 4);
+		game.start("Worms", 256, 170, 4, true);
 	}
 }

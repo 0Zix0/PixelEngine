@@ -14,12 +14,31 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+/**
+ * This class represents an abstract game.
+ * In order to create your own game you simply need to create a class
+ * which inherits from this base class and implement the methods
+ * 'onCreate()', 'onRender()' and 'onUpdate()'.
+ * In order to run the game you must create a new instance of it and call
+ * the 'start()' method with your desired parameters.
+ */
 public abstract class Game extends Canvas implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Called once the game object has been created.
+	 */
 	public abstract void onCreate();
+	/**
+	 * Called 60 times a second, put input code in here.
+	 */
 	public abstract void onUpdate();
+	/**
+	 * Called as many times as possible to render the game at the highest
+	 * possible frame rate. Use the provided renderer instance to render
+	 * to the screen.
+	 */
 	public abstract void onRender(Renderer renderer);
 
 	private Thread thread;
@@ -31,15 +50,40 @@ public abstract class Game extends Canvas implements Runnable {
 	private int[] pixels;	
 	private Renderer renderer;
 	// Start Stats
+	private boolean debug = false;
 	private List<Integer> loggedFPS = new ArrayList<Integer>();
 	private long startTime;
+	private float currentFPS = 0;
+	private float currentUPS = 0;
 	// End Stats
 	
+	/**
+	 * Creates the window and instantiates all required objects for the program
+	 * to run.
+	 * @param title The title of the window.
+	 * @param width How many pixels the screen should be wide.
+	 * @param height How many pixels the screen should be high.
+	 * @param scale How many physical pixels on the screen should each pixel display as.
+	 */
 	protected void start(String title, int width, int height, int scale) {
+		start(title, width, height, scale, false);
+	}
+	
+	/**
+	 * Creates the window and instantiates all required objects for the program
+	 * to run.
+	 * @param title The title of the window.
+	 * @param width How many pixels the screen should be wide.
+	 * @param height How many pixels the screen should be high.
+	 * @param scale How many physical pixels on the screen should each pixel display as.
+	 * @param debug Whether or now to display debug information in the corner of the screen.
+	 */
+	protected void start(String title, int width, int height, int scale, boolean debug) {
 		this.width = width;
 		this.height = height;
 		this.scale = scale;
 		this.title = title;
+		this.debug = debug;
 		
 		Dimension size = new Dimension(width * scale, height * scale);
 		setPreferredSize(size);
@@ -59,8 +103,10 @@ public abstract class Game extends Canvas implements Runnable {
 					averageFPS = averageFPS / loggedFPS.size();
 				}
 				
-				//System.out.println("Ran for " + (System.currentTimeMillis() - startTime) / 1000.0f + " seconds");
-				//System.out.println("Average FPS was " + averageFPS + "fps");
+				float runTime = (System.currentTimeMillis() - startTime) / 1000.0f;
+				
+				System.out.println("Ran for " + runTime + " seconds");
+				System.out.println("Average FPS was " + averageFPS + "fps");
 				
 				super.windowClosing(e);
 			}
@@ -104,6 +150,10 @@ public abstract class Game extends Canvas implements Runnable {
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
 		g.drawImage(image, 0, 0, width * scale, height * scale, null);
+		if(debug) {
+			g.drawString("FPS: " + currentFPS, 3, 15);
+			g.drawString("USP: " + currentUPS, 3, 15 + 12 + 3);
+		}
 		
 		g.dispose();
 		bs.show();
@@ -131,7 +181,9 @@ public abstract class Game extends Canvas implements Runnable {
 			
 			if(System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-				frame.setTitle(title + " | " + updates + " ups, " + frames + " fps");
+				currentFPS = frames;
+				currentUPS = updates;
+				//frame.setTitle(title + " | " + updates + " ups, " + frames + " fps");
 				loggedFPS.add(frames);
 				updates = 0;
 				frames = 0;

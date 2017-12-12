@@ -19,6 +19,15 @@ public class Renderer {
 		}
 	}
 	
+	/**
+	 * Renders a wire frame model to the screen.
+	 * @param coords Array list of coordinates to draw.
+	 * @param x The x position to draw to.
+	 * @param y The y position to draw to.
+	 * @param r Rotation of the model, in radians.
+	 * @param s Scale factor of the model, to change the size.
+	 * @param color The color that the model should be drawn as.
+	 */
 	public void drawWireFrame(ArrayList<Vector2f> coords, float x, float y, float r, float s, int color) {
 		ArrayList<Vector2f> transformed = new ArrayList<>();
 		int verts = coords.size();
@@ -49,6 +58,49 @@ public class Renderer {
 		}
 	}
 	
+	/**
+	 * Draws a single sprite to the screen.
+	 * @param x The x position to draw to.
+	 * @param y The y position to draw to.
+	 * @param sprite The sprite which to draw.
+	 */
+	public void drawSprite(int x, int y, Sprite sprite) {
+		for (int i = 0; i < sprite.getWidth(); i++) {
+			for (int j = 0; j < sprite.getHeight(); j++) {
+				if (sprite.getGlyph(i, j) != ' ') {
+					drawPixel(x + i, y + j, sprite.getColor(i, j));
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Draws a region from a sprite.
+	 * @param x The x position to draw to.
+	 * @param y The y position to draw to.
+	 * @param sprite The sprite which to draw.
+	 * @param ox The x position within the sprite to start drawing from.
+	 * @param oy The y position within the sprite to start drawing from.
+	 * @param w The height of the desired region within the sprite.
+	 * @param h The width of the desired region within the sprite.
+	 */
+	public void drawPartialSprite(int x, int y, Sprite sprite, int ox, int oy, int w, int h) {
+		for (int i = 0; i < w; i++) {
+			for (int j = 0; j < h; j++) {
+				if (sprite.getGlyph(i+ox, j+oy) != 0x20)
+					drawPixel(x + i, y + j, sprite.getColor(i+ox, j+oy));
+			}
+		}
+	}
+	
+	/**
+	 * Uses the Bresenham algorithm to draw a line between any 2 points on the screen.
+	 * @param x The start x position.
+	 * @param y The start y position.
+	 * @param x2 The end x position.
+	 * @param y2 The end y position.
+	 * @param color The color of the line.
+	 */
 	public void drawLine(int x, int y, int x2, int y2, int color) {
 	    int w = x2 - x ;
 	    int h = y2 - y ;
@@ -79,6 +131,12 @@ public class Renderer {
 	    }
 	}
 	
+	/**
+	 * Puts a singular pixel on the screen.
+	 * @param xp The x position to draw to.
+	 * @param yp The y position to daw to.
+	 * @param color The color of the pixel.
+	 */
 	public void drawPixel(int xp, int yp, int color) {
 		if(xp < 0 || xp >= width || yp < 0 || yp >= height) return;
 		pixels[xp + yp * width] = color;

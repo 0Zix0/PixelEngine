@@ -3,6 +3,7 @@ package com.zix.worms;
 import java.util.ArrayList;
 
 import com.engine.Renderer;
+import com.engine.Sprite;
 import com.engine.Vector2f;
 
 public class Missile extends PhysicsObject {
